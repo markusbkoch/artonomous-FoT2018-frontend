@@ -16,6 +16,25 @@ var seedText = document.querySelector('.seed-text');
 
 var isIOS = /(iPad|iPhone|iPod)/i.test(navigator.userAgent);
 
+function getUrlParams( prop ) {
+    var params = {};
+    var search = decodeURIComponent( window.location.href.slice( window.location.href.indexOf( '?' ) + 1 ) );
+    var definitions = search.split( '&' );
+
+    definitions.forEach( function( val, key ) {
+        var parts = val.split( '=', 2 );
+        params[ parts[ 0 ] ] = parts[ 1 ];
+    } );
+
+    return ( prop && prop in params ) ? params[ prop ] : undefined;
+}
+
+var seed = getUrlParams('seed');
+var colorPalette = getUrlParams('colorPalette');
+console.log(seed);
+console.log(colorPalette);
+
+
 if (isIOS) { // iOS bugs with full screen ...
   const fixScroll = () => {
     setTimeout(() => {
@@ -36,7 +55,7 @@ canvas.style.position = 'absolute';
 
 var randomize = (ev) => {
   if (ev) ev.preventDefault();
-  reload(createConfig(undefined,undefined));
+  reload(createConfig(seed,colorPalette));
 };
 randomize();
 resize();
