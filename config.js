@@ -13,13 +13,7 @@ module.exports = function (seed) {
   var random = createRandomRange(randomFunc);
 
   var maps = [
-    'sym6.jpg', 'sym3.jpg',
-    'scifi.jpg', 'nature1.jpg',
-    'map7.jpg', 'geo5.jpg', 'geo4.jpg',
-    'geo3.jpg', 'geo1.jpg', 'fractal2.jpg',
-    'fractal1.jpg', 'eye.jpg', 'city5.jpg',
-    'city2.jpg', 'church2.jpg', 'architecture.jpg',
-    'pat1.jpg'
+    'base_image.jpg'
   ].map(function (p) {
     return 'maps/' + p;
   });
