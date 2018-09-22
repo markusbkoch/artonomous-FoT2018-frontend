@@ -24,15 +24,15 @@ module.exports = function (seed) {
     // rendering options
     random: randomFunc,
     seedName: seed,
-    pointilism: random(0, 0.1),
-    noiseScalar: [ random(0.000001, 0.000001), random(0.0002, 0.004) ],
+    pointilism: 0,//random(0, 0.1),
+    noiseScalar: [0.000001, 0.0002],//[ random(0.000001, 0.000001), random(0.0002, 0.004) ],
     globalAlpha: 0.5,
-    startArea: random(0.0, 1.5),
-    maxRadius: random(5, 100),
-    lineStyle: random(1) > 0.5 ? 'round' : 'square',
-    interval: random(0.001, 0.01),
-    count: Math.floor(random(50, 2000)),
-    steps: Math.floor(random(100, 1000)),
+    startArea: 1.5,//random(0.0, 1.5),
+    maxRadius: 50,//random(5, 100),
+    lineStyle: 'round',//random(1) > 0.5 ? 'round' : 'square',
+    interval: 0.001,//random(0.001, 0.01),
+    count: 1000,//Math.floor(random(50, 2000)),
+    steps: 1000,//Math.floor(random(100, 1000)),
     endlessBrowser: false, // Whether to endlessly step in browser
 
     // background image that drives the algorithm
