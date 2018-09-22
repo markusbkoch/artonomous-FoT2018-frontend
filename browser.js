@@ -5,6 +5,7 @@ var createConfig = require('./config');
 var createRenderer = require('./lib/createRenderer');
 var createLoop = require('raf-loop');
 var contrast = require('wcag-contrast');
+var Web3 = require('web3');
 
 var canvas = document.querySelector('#canvas');
 var background = new window.Image();
@@ -34,6 +35,12 @@ var colorPalette = getUrlParams('colorPalette');
 console.log(seed);
 console.log(colorPalette);
 
+var contract_json = require('./CryptoKittiesCore.json');
+var ckabi = contract_json.abi;
+var web3js = new Web3(web3.currentProvider);
+var ckcore = new web3js.eth.Contract(ckabi, '0x06012c8cf97bead5deae237070f9587f8e7a266d');
+var tokenId = getUrlParams('tokenId');
+
 
 if (isIOS) { // iOS bugs with full screen ...
   const fixScroll = () => {
@@ -53,20 +60,32 @@ document.body.style.margin = '0';
 document.body.style.overflow = 'hidden';
 canvas.style.position = 'absolute';
 
-var randomize = (ev) => {
-  if (ev) ev.preventDefault();
-  reload(createConfig(seed,colorPalette));
-};
-randomize();
-resize();
+// var randomize = (ev) => {
+//   if (ev) ev.preventDefault();
+//   reload(createConfig(seed,colorPalette));
+// };
+// randomize();
+// resize();
+
+if (typeof tokenId === 'undefined') {
+  reload(createConfig(seed, colorPalette));
+  resize();
+} else {
+  ckcore.methods.getKitty(tokenId).call(function(error, result) {
+    seed = result.birthTime;
+    colorPalette = result.matronId % 2
+    reload(createConfig(seed, colorPalette));
+    resize();
+  })
+}
 
 const addEvents = (element) => {
   element.addEventListener('mousedown', (ev) => {
     if (ev.button === 0) {
-      randomize(ev);
+      // randomize(ev);
     }
   });
-  element.addEventListener('touchstart', randomize);
+  // element.addEventListener('touchstart', randomize);
 };
 
 const targets = [ document.querySelector('#fill'), canvas ];
