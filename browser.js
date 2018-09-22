@@ -39,7 +39,7 @@ var contract_json = require('./CryptoKittiesCore.json');
 var ckabi = contract_json.abi;
 var web3js = new Web3(web3.currentProvider);
 var ckcoreMainnet = '0x06012c8cf97bead5deae237070f9587f8e7a266d';
-var FotRinkeby = '0x9e9Ff596b45CdC26c838Ef3eF63c088C0c8205cC';
+var FotRinkeby = '0x326d0e2190e351d158977570dB0231B9eB6C5BaC';
 var ckcore = new web3js.eth.Contract(ckabi, FotRinkeby);
 var tokenId = getUrlParams('tokenId');
 
