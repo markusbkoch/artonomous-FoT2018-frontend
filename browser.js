@@ -36,7 +36,7 @@ canvas.style.position = 'absolute';
 
 var randomize = (ev) => {
   if (ev) ev.preventDefault();
-  reload(createConfig());
+  reload(createConfig(undefined,undefined));
 };
 randomize();
 resize();

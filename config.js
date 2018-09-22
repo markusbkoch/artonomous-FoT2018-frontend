@@ -2,15 +2,21 @@ var seedRandom = require('seed-random');
 var palettes = require('./lib/color-palettes.json');
 var createRandomRange = require('./lib/random-range');
 
-module.exports = function (seed) {
+module.exports = function (seed, paletteId) {
   if (typeof seed === 'undefined') {
     seed = String(Math.floor(Math.random() * 1000000));
   }
+
 
   console.log('Seed:', seed);
 
   var randomFunc = seedRandom(seed);
   var random = createRandomRange(randomFunc);
+
+  if (typeof paletteId === 'undefined') {
+    paletteId = Math.floor(random() * palettes.length);
+  }
+  paletteId = paletteId % (palettes.length-1);
 
   var maps = [
     'base_image.jpg'
@@ -54,7 +60,7 @@ module.exports = function (seed) {
   };
 
   function getPalette () {
-    var paletteColors = palettes[Math.floor(random() * palettes.length)];
+    var paletteColors = palettes[paletteId];
     return arrayShuffle(paletteColors);
   }
 
