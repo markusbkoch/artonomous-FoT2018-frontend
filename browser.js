@@ -14,7 +14,8 @@ var context = canvas.getContext('2d');
 var loop = createLoop();
 var seedContainer = document.querySelector('.seed-container');
 var seedText = document.querySelector('.seed-text');
-var ownerText = document.querySelector('.owner-text');
+var generatorText = document.querySelector('.generator-text');
+var artPieceText = document.querySelector('.artpiece-text');
 
 var isIOS = /(iPad|iPhone|iPod)/i.test(navigator.userAgent);
 
@@ -36,12 +37,12 @@ var colorPalette = getUrlParams('colorPalette');
 console.log(seed);
 console.log(colorPalette);
 
-var contract_json = require('./CryptoKittiesCore.json');
-var ckabi = contract_json.abi;
+var contract_json = require('./ArtCore.json');
+var fotabi = contract_json.abi;
 var web3js = new Web3(web3.currentProvider);
-var ckcoreMainnet = '0x06012c8cf97bead5deae237070f9587f8e7a266d';
-var FotRinkeby = '0x326d0e2190e351d158977570dB0231B9eB6C5BaC';
-var ckcore = new web3js.eth.Contract(ckabi, FotRinkeby);
+// var FotRinkeby = '0xfFBC9c9662c907D61a81a07Bc49c87bc37B979cf';
+var FotMain = '0xfE9B5e8F7E8f6493F7D8532D915c9d53dFfe9080';
+var ckcore = new web3js.eth.Contract(fotabi, FotMain);
 var tokenId = getUrlParams('tokenId');
 var tokenOwner = '0x';
 
@@ -77,16 +78,20 @@ function renderArt(_tokenId) {
   if (typeof _tokenId === 'undefined') {
     renderRandomArt();
   } else {
-    ckcore.methods.getKitty(_tokenId).call(function(error, result) {
-      if (typeof result !== 'undefined') {
-        colorPalette = result.generation;
+    tokenId = _tokenId;
+    ckcore.methods.getArtToken(_tokenId).call(function(error, r1) {
+      console.log("getArtToken " + _tokenId + ": "+ r1);
+      if (typeof r1 !== 'undefined') {
+        seed = _tokenId + r1.birthTime;
+        colorPalette = r1.generator;
+        ckcore.methods.ownerOf(_tokenId).call(function(error, r2) {
+          if (typeof r2 !== 'undefined') {
+            tokenOwner = r2;
+            reload(createConfig(seed, colorPalette));
+            resize();
+          }
+        })
       }
-      ckcore.methods.ownerOf(_tokenId).call(function(error, result) {
-        seed = _tokenId;
-        tokenOwner = result;
-        reload(createConfig(seed, colorPalette));
-        resize();
-      })
     })
   }
 }
@@ -132,7 +137,8 @@ function reload (config) {
   document.body.style.background = opts.palette[0];
   seedContainer.style.color = getBestContrast(opts.palette[0], opts.palette.slice(1));
   seedText.textContent = opts.seedName;
-  ownerText.textContent = tokenOwner;
+  artPieceText.textContent = tokenId;
+  generatorText.textContent = (parseInt(colorPalette)+1);
 
   background.onload = () => {
     var renderer = createRenderer(opts);
